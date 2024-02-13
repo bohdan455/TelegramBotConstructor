@@ -1,7 +1,13 @@
+using BLL.Services.Interfaces;
+using BLL.Services.Realizations;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddTransient<IFileStorageService, FileStorageService>();
+builder.Services.AddTransient<ITelegramBotService, TelegramBotService>();
 
 var app = builder.Build();
 
@@ -14,3 +20,5 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapControllers();
+
+app.Run();
