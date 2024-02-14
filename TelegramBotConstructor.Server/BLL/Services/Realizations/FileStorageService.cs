@@ -7,25 +7,7 @@ namespace BLL.Services.Realizations;
 
 public class FileStorageService : IFileStorageService
 {
-    public async Task<FileStream> GenerateProjectFiles(string code)
-    {
-        var randomProjectName = $"Project{Guid.NewGuid()}";
-        var workingDirectory = @"D:\projects";
-        var projectPath = Path.Combine(workingDirectory, randomProjectName);
-
-        CopyDirectory(
-            ProjectSavingPlaceConfiguration.BaseProjectPath, 
-            Path.Combine(workingDirectory, randomProjectName), 
-            true);
-        
-        await ChangeProjectCode(Path.Combine(workingDirectory, randomProjectName), code);
-        await BuildProject(Path.Combine(workingDirectory, randomProjectName));
-        
-        var archivePath = Path.Combine(projectPath, $"{randomProjectName}.zip");
-        return await CreateArchiveFromFolder(projectPath, archivePath);
-    }
-
-    private void CopyDirectory(string sourceDir, string destinationDir, bool recursive)
+    public void CopyDirectory(string sourceDir, string destinationDir, bool recursive)
     {
         var dir = new DirectoryInfo(sourceDir);
     
@@ -52,49 +34,27 @@ public class FileStorageService : IFileStorageService
         }
     }
     
-    private async Task<FileStream> CreateArchiveFromFolder(string projectPath ,string zipFilePath)
+    public async Task<FileStream> CreateArchiveFromFolder(string projectPath ,string zipFilePath)
     {
         var projectDebugPath = Path.Combine(projectPath, ArchiveConfigurations.SourcePath);
         ZipFile.CreateFromDirectory(projectDebugPath, zipFilePath);
-        await WaitForFile(zipFilePath);
+        await WaitForFileCreating(zipFilePath);
         return File.OpenRead(zipFilePath);
     }
 
-    private static Task<string> BuildProject(string directory)
+    public Task<string> BuildProject(string directory)
     {
         const string buildProjectCommand = $"dotnet build";
         return ExecuteCommand(buildProjectCommand, directory);
     }
     
-    private static async Task<string> ExecuteCommand(string command, string directory)
+    public Task ChangeProjectCode(string pathToProject, string code)
     {
-        var processStartInfo = new ProcessStartInfo
-        {
-            FileName = "cmd.exe",
-            Arguments = "/c" + command, 
-            WorkingDirectory = directory, 
-            RedirectStandardOutput = true, 
-            CreateNoWindow = true 
-        };
-
-        var process = new Process();
-        process.StartInfo = processStartInfo;
-        process.Start();
-
-        var output = await process.StandardOutput.ReadToEndAsync();
-    
-        await process.WaitForExitAsync();
-        return output;
-    }
-    
-    private static Task ChangeProjectCode(string pathToProject, string code)
-    {
-        var textToWrite = code;
         var pathToFile = Path.Combine(pathToProject, "Program.cs");
-        return File.WriteAllTextAsync(pathToFile, textToWrite);   
+        return File.WriteAllTextAsync(pathToFile, code);   
     }
 
-    private static async Task WaitForFile(string filePath)
+    public async Task WaitForFileCreating(string filePath)
     {
         const int maxAttempts = ArchiveConfigurations.MaxCreatingAttempts;
         const int delayMilliseconds = ArchiveConfigurations.CreatingCheckDelayMilliseconds;
@@ -117,5 +77,26 @@ public class FileStorageService : IFileStorageService
         }
 
         throw new TimeoutException("File access timeout exceeded.");
+    }
+    
+    private async Task<string> ExecuteCommand(string command, string directory)
+    {
+        var processStartInfo = new ProcessStartInfo
+        {
+            FileName = "cmd.exe",
+            Arguments = "/c" + command, 
+            WorkingDirectory = directory, 
+            RedirectStandardOutput = true, 
+            CreateNoWindow = true 
+        };
+
+        var process = new Process();
+        process.StartInfo = processStartInfo;
+        process.Start();
+
+        var output = await process.StandardOutput.ReadToEndAsync();
+    
+        await process.WaitForExitAsync();
+        return output;
     }
 }

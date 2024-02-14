@@ -1,18 +1,25 @@
 ﻿using BLL.Services.Interfaces;
+using Configurations;
 
 namespace BLL.Services.Realizations;
 
-public class TelegramBotService : ITelegramBotService
+public class TelegramBotService(IFileStorageService fileStorageService) : ITelegramBotService
 {
-    private readonly IFileStorageService _fileStorageService;
+    public async Task<FileStream> CreateBot()
+    {
+        var randomProjectName = $"Project{Guid.NewGuid()}";
+        var workingDirectory = @"D:\projects";
+        var projectPath = Path.Combine(workingDirectory, randomProjectName);
 
-    public TelegramBotService(IFileStorageService fileStorageService)
-    {
-        _fileStorageService = fileStorageService;
-    }
-    
-    public Task<FileStream> CreateBot()
-    {
-        return _fileStorageService.GenerateProjectFiles("Console.WriteLine(\"Hello, bot!\");");
+        fileStorageService.CopyDirectory(
+            ProjectSavingPlaceConfiguration.BaseProjectPath, 
+            Path.Combine(workingDirectory, randomProjectName), 
+            true);
+        
+        await fileStorageService.ChangeProjectCode(Path.Combine(workingDirectory, randomProjectName), "Console.WriteLine(\"Hello, from refactored!\");");
+        await fileStorageService.BuildProject(Path.Combine(workingDirectory, randomProjectName));
+        
+        var archivePath = Path.Combine(projectPath, $"{randomProjectName}.zip");
+        return await fileStorageService.CreateArchiveFromFolder(projectPath, archivePath);
     }
 }
