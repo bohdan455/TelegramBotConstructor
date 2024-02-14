@@ -13,12 +13,43 @@ public class FileStorageService : IFileStorageService
         var workingDirectory = @"D:\projects";
         var projectPath = Path.Combine(workingDirectory, randomProjectName);
 
-        await CreateProject(workingDirectory, randomProjectName);
+        CopyDirectory(
+            ProjectSavingPlaceConfiguration.BaseProjectPath, 
+            Path.Combine(workingDirectory, randomProjectName), 
+            true);
+        
         await ChangeProjectCode(Path.Combine(workingDirectory, randomProjectName), code);
         await BuildProject(Path.Combine(workingDirectory, randomProjectName));
         
         var archivePath = Path.Combine(projectPath, $"{randomProjectName}.zip");
         return await CreateArchiveFromFolder(projectPath, archivePath);
+    }
+
+    private void CopyDirectory(string sourceDir, string destinationDir, bool recursive)
+    {
+        var dir = new DirectoryInfo(sourceDir);
+    
+        if (!dir.Exists)
+            throw new DirectoryNotFoundException($"Source directory not found: {dir.FullName}");
+    
+        var dirs = dir.GetDirectories();
+    
+        Directory.CreateDirectory(destinationDir);
+    
+        foreach (var file in dir.GetFiles())
+        {
+            var targetFilePath = Path.Combine(destinationDir, file.Name);
+            file.CopyTo(targetFilePath);
+        }
+
+
+        if (!recursive) return;
+    
+        foreach (var subDir in dirs)
+        {
+            var newDestinationDir = Path.Combine(destinationDir, subDir.Name);
+            CopyDirectory(subDir.FullName, newDestinationDir, true);
+        }
     }
     
     private async Task<FileStream> CreateArchiveFromFolder(string projectPath ,string zipFilePath)
@@ -27,12 +58,6 @@ public class FileStorageService : IFileStorageService
         ZipFile.CreateFromDirectory(projectDebugPath, zipFilePath);
         await WaitForFile(zipFilePath);
         return File.OpenRead(zipFilePath);
-    }
-    
-    private static Task<string> CreateProject(string directory, string fileName)
-    {
-        var createAppCommand = $"dotnet new console -n {fileName}";
-        return ExecuteCommand(createAppCommand, directory);
     }
 
     private static Task<string> BuildProject(string directory)
