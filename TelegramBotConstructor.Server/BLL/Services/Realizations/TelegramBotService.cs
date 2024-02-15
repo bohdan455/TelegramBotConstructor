@@ -1,18 +1,23 @@
 ﻿using BLL.Services.Interfaces;
 using Configurations;
+using Domain.Models;
 
 namespace BLL.Services.Realizations;
 
 public class TelegramBotService : ITelegramBotService
 {
     private readonly IFileStorageService _fileStorageService;
+    private readonly ICodeWriterService _codeWriterService;
 
-    public TelegramBotService(IFileStorageService fileStorageService)
+    public TelegramBotService(
+        IFileStorageService fileStorageService,
+        ICodeWriterService codeWriterService)
     {
         _fileStorageService = fileStorageService;
+        _codeWriterService = codeWriterService;
     }
     
-    public async Task<FileStream> CreateBot()
+    public async Task<FileStream> CreateBot(List<TelegramAnswerPairModel> pairModels)
     {
         var randomProjectName = $"Project{Guid.NewGuid()}";
         var workingDirectory = ProjectSavingPlaceConfiguration.ProjectSavingPlace;
@@ -22,24 +27,20 @@ public class TelegramBotService : ITelegramBotService
             ProjectSavingPlaceConfiguration.BaseProjectPath, 
             Path.Combine(workingDirectory, randomProjectName), 
             true);
-        
-        await _fileStorageService.ChangeProjectCode(Path.Combine(workingDirectory, randomProjectName), """
-            
-                                using Telegram.Bot;
-                                using Telegram.Bot.Types;
-            
-                                await new TelegramBotClient("").SendTextMessageAsync(new ChatId(""), "");
 
-            """);
+        await _fileStorageService.ChangeProjectCode(
+            Path.Combine(workingDirectory, randomProjectName),
+            MakeBotCode(
+                _codeWriterService.CreateSwitchConstructor(pairModels)));
         await _fileStorageService.BuildProject(Path.Combine(workingDirectory, randomProjectName));
         
         var archivePath = Path.Combine(projectPath, $"{randomProjectName}.zip");
         return await _fileStorageService.CreateArchiveFromFolder(projectPath, archivePath);
     }
 
-    private static string GetBotCode(string innerCode)
+    private static string MakeBotCode(string innerCode)
     {
-        var code = """
+        var code = $$"""
 using Microsoft.Extensions.Configuration;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
@@ -85,7 +86,9 @@ async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, Cancel
 
         Console.WriteLine($"Received a '{message}' message in chat {chatId}.");
         var answer = "Invalid message";
-    
+        
+        {{innerCode}}
+        
         var sentMessage = await botClient.SendTextMessageAsync(
                 chatId: chatId,
                 text: answer,

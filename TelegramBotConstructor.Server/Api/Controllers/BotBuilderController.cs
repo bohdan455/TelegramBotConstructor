@@ -1,4 +1,5 @@
 ﻿using BLL.Services.Interfaces;
+using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -14,10 +15,10 @@ public class BotBuilderController : ControllerBase
         _telegramBotService = telegramBotService;
     }
     
-    [HttpGet]
-    public async Task<IActionResult> CreateBot()
+    [HttpPost]
+    public async Task<IActionResult> CreateBot(TelegramSettingsModel telegramSettingsModel)
     {
-        var file = await _telegramBotService.CreateBot();
+        var file = await _telegramBotService.CreateBot(telegramSettingsModel.MessageAnswers);
         return File(file, "application/zip", "bot.zip");
     }
 }
