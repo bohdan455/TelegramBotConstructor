@@ -1,0 +1,13 @@
+nav{
+  font-family: "Roboto", sans-serif;
+  background-color: #0076f5;
+  height: 60px;
+  width: 100%;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  .logo{
+    color: white;
+    font-size: 20px;
+  }
+}
