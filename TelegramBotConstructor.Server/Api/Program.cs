@@ -8,6 +8,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient<IFileStorageService, FileStorageService>();
 builder.Services.AddTransient<ITelegramBotService, TelegramBotService>();
+builder.Services.AddTransient<ICodeWriterService, CodeWriterService>();
 
 var app = builder.Build();
 

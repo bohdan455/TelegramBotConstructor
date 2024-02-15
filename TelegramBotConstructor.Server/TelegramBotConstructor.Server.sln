@@ -8,6 +8,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Configurations", "Configura
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseTelegramProject", "BaseTelegramProject\BaseTelegramProject.csproj", "{32F2C4FC-6C2C-4600-A308-B7B75BED24C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{CD910FC0-99AD-4F5C-B719-DD6F66FEFA72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{FA3526C6-5564-41B1-96AD-A7B8A4376B24}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +34,13 @@ Global
 		{32F2C4FC-6C2C-4600-A308-B7B75BED24C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32F2C4FC-6C2C-4600-A308-B7B75BED24C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32F2C4FC-6C2C-4600-A308-B7B75BED24C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD910FC0-99AD-4F5C-B719-DD6F66FEFA72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD910FC0-99AD-4F5C-B719-DD6F66FEFA72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD910FC0-99AD-4F5C-B719-DD6F66FEFA72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD910FC0-99AD-4F5C-B719-DD6F66FEFA72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA3526C6-5564-41B1-96AD-A7B8A4376B24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA3526C6-5564-41B1-96AD-A7B8A4376B24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA3526C6-5564-41B1-96AD-A7B8A4376B24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA3526C6-5564-41B1-96AD-A7B8A4376B24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
