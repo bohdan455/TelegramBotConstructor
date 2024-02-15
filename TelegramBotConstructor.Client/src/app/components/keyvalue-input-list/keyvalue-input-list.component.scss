@@ -1,0 +1,46 @@
+.keyvalue-input-list__item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+
+  input{
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+
+  button{
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background-color: #0076f5;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.keyvalue-input-list{
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+.keyvalue-input-list__add{
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  background-color: #0076f5;
+  color: white;
+  cursor: pointer;
+}
+
+.keyvalue-input-list__submit{
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  background-color: #ff2695;
+  color: white;
+  cursor: pointer;
+}

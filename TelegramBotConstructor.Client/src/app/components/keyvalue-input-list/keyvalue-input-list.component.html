@@ -1,0 +1,22 @@
+<div class="keyvalue-input-list">
+  <form>
+    <div *ngFor="let keyValue of keyvalueList; index as index" class="keyvalue-input-list__item">
+      <input type="text" [value]="keyValue.key" placeholder="Key">
+      <input type="text" [value]="keyValue.value" placeholder="Value">
+      <button
+        (click)="deleteKeyValue(index)"
+        type="button"
+        class="keyvalue-input-list__remove"
+      >Remove</button>
+    </div>
+    <button
+      type="button"
+      (click)="addKeyValue()"
+      class="keyvalue-input-list__add"
+    >Add</button>
+    <button
+      type="submit"
+      class="keyvalue-input-list__submit"
+    >Submit</button>
+  </form>
+</div>
