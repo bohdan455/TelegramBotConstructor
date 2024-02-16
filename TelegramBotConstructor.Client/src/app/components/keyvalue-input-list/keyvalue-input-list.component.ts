@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {TelegramBotSettingsModel} from "../../models/telegramBotSettingsModel";
 import {TelegramAnswerPairModel} from "../../models/telegramAnswerPairModel";
 import {BotCreatorService} from "../../services/botCreator.service";
@@ -10,14 +10,15 @@ import {FormsModule} from "@angular/forms";
   standalone: true,
   imports: [
     NgForOf,
-    FormsModule
+    FormsModule,
+    NgIf
   ],
   templateUrl: './keyvalue-input-list.component.html',
   styleUrl: './keyvalue-input-list.component.scss'
 })
 export class KeyvalueInputListComponent {
   public keyvalueList: Array<{key: string, value: string}> = [{key: '', value: ''}];
-  public submitDisabled: boolean = false;
+  public botIsGenerating: boolean = false;
 
   constructor(public botCreatorService: BotCreatorService) {
   }
@@ -32,7 +33,7 @@ export class KeyvalueInputListComponent {
 
   getFile(event: SubmitEvent) {
     event.preventDefault();
-    this.submitDisabled = true;
+    this.botIsGenerating = true;
     let settings : TelegramBotSettingsModel;
     settings = {
       messageAnswers: this.keyvalueList.map((item) : TelegramAnswerPairModel => {
@@ -48,10 +49,10 @@ export class KeyvalueInputListComponent {
       let blob = new Blob([data], { type: 'application/zip' });
       let url= window.URL.createObjectURL(blob);
       window.open(url);
-      this.submitDisabled = false;
+      this.botIsGenerating = false;
       },
       error: () => {
-      this.submitDisabled = false;
+      this.botIsGenerating = false;
     }});
   }
 }

@@ -17,9 +17,10 @@
     <button
       type="submit"
       class="keyvalue-input-list__submit"
-      [class.keyvalue-input-list__submit--disabled]="submitDisabled"
-      [class.keyvalue-input-list__submit--enabled]="!submitDisabled"
-      [disabled]="submitDisabled"
+      [class.keyvalue-input-list__submit--disabled]="botIsGenerating"
+      [class.keyvalue-input-list__submit--enabled]="!botIsGenerating"
+      [disabled]="botIsGenerating"
     >Submit</button>
+    <span class="file_loading-text" *ngIf="botIsGenerating">Loading...</span>
   </form>
 </div>
