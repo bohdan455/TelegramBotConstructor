@@ -40,7 +40,14 @@
   padding: 10px;
   border: 1px solid #e0e0e0;
   border-radius: 5px;
-  background-color: #ff2695;
   color: white;
+}
+.keyvalue-input-list__submit--disabled{
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+.keyvalue-input-list__submit--enabled{
+  background-color: #ff2695;
   cursor: pointer;
 }

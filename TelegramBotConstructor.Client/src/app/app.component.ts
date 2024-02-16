@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {NavbarComponent} from "./components/navbar/navbar.component";
 import {KeyvalueInputListComponent} from "./components/keyvalue-input-list/keyvalue-input-list.component";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 
 @Component({
   selector: 'app-root',
