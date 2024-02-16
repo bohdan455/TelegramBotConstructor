@@ -1,8 +1,8 @@
 <div class="keyvalue-input-list">
-  <form>
+  <form (submit)="getFile($event)">
     <div *ngFor="let keyValue of keyvalueList; index as index" class="keyvalue-input-list__item">
-      <input type="text" [value]="keyValue.key" placeholder="Key">
-      <input type="text" [value]="keyValue.value" placeholder="Value">
+      <input required type="text" [(ngModel)]="keyValue.key" placeholder="Key" name="key{{index}}}">
+      <input required type="text" [(ngModel)]="keyValue.value" placeholder="Value" name="value{{index}}}">
       <button
         (click)="deleteKeyValue(index)"
         type="button"
@@ -17,6 +17,9 @@
     <button
       type="submit"
       class="keyvalue-input-list__submit"
+      [class.keyvalue-input-list__submit--disabled]="submitDisabled"
+      [class.keyvalue-input-list__submit--enabled]="!submitDisabled"
+      [disabled]="submitDisabled"
     >Submit</button>
   </form>
 </div>
