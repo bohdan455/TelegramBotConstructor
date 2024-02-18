@@ -17,7 +17,7 @@ public class TelegramBotService : ITelegramBotService
         _codeWriterService = codeWriterService;
     }
     
-    public async Task<FileStream> CreateBot(List<TelegramAnswerPairModel> pairModels)
+    public async Task<Stream> CreateBot(List<TelegramAnswerPairModel> pairModels)
     {
         var randomProjectName = $"Project{Guid.NewGuid()}";
         var workingDirectory = ProjectSavingPlaceConfiguration.ProjectSavingPlace;

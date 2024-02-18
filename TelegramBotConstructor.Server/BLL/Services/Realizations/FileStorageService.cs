@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO.Compression;
-using BLL.Services.Interfaces;
+
 using Configurations;
 
 namespace BLL.Services.Realizations;
@@ -34,12 +34,23 @@ public class FileStorageService : IFileStorageService
         }
     }
     
-    public async Task<FileStream> CreateArchiveFromFolder(string projectPath ,string zipFilePath)
+    public Task<Stream> CreateArchiveFromFolder(string projectPath ,string zipFilePath)
     {
         var projectDebugPath = Path.Combine(projectPath, ArchiveConfigurations.SourcePath);
-        ZipFile.CreateFromDirectory(projectDebugPath, zipFilePath);
-        await WaitForFileCreating(zipFilePath);
-        return File.OpenRead(zipFilePath);
+        
+        var zipStream = new MemoryStream();
+
+        using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
+        {
+            foreach (var filePath  in Directory.GetFiles(projectDebugPath))
+            {
+                var fileName = Path.GetFileName(filePath);
+                archive.CreateEntryFromFile(filePath, fileName);
+            }
+        }
+        
+        zipStream.Seek(0, SeekOrigin.Begin);
+        return Task.FromResult<Stream>(zipStream);
     }
 
     public Task<string> BuildProject(string directory)
@@ -52,31 +63,6 @@ public class FileStorageService : IFileStorageService
     {
         var pathToFile = Path.Combine(pathToProject, "Program.cs");
         return File.WriteAllTextAsync(pathToFile, code);   
-    }
-
-    public async Task WaitForFileCreating(string filePath)
-    {
-        const int maxAttempts = ArchiveConfigurations.MaxCreatingAttempts;
-        const int delayMilliseconds = ArchiveConfigurations.CreatingCheckDelayMilliseconds;
-
-        for (var i = 0; i < maxAttempts; i++)
-        {
-            if (File.Exists(filePath))
-            {
-                try
-                {
-                    await using var fileStream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.None);
-                    return;
-                }
-                catch (IOException)
-                {
-                }
-            }
-        
-            await Task.Delay(delayMilliseconds);
-        }
-
-        throw new TimeoutException("File access timeout exceeded.");
     }
     
     private async Task<string> ExecuteCommand(string command, string directory)
