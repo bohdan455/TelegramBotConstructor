@@ -4,6 +4,7 @@ import {TelegramBotSettingsModel} from "../../models/telegramBotSettingsModel";
 import {TelegramAnswerPairModel} from "../../models/telegramAnswerPairModel";
 import {BotCreatorService} from "../../services/botCreator.service";
 import {FormsModule} from "@angular/forms";
+import {BotRepliesListComponent} from "../bot-replies-list/bot-replies-list.component";
 
 @Component({
   selector: 'app-bot-configuration',
@@ -11,7 +12,8 @@ import {FormsModule} from "@angular/forms";
   imports: [
     NgForOf,
     FormsModule,
-    NgIf
+    NgIf,
+    BotRepliesListComponent
   ],
   templateUrl: './bot-configuration.component.html',
   styleUrl: './bot-configuration.component.scss'
@@ -25,10 +27,6 @@ export class BotConfigurationComponent {
 
   addKeyValue() {
     this.keyvalueList.push({key: '', value: ''});
-  }
-
-  deleteKeyValue(index: number) {
-    this.keyvalueList.splice(index, 1);
   }
 
   getFile(event: SubmitEvent) {
