@@ -6,17 +6,17 @@ import {BotCreatorService} from "../../services/botCreator.service";
 import {FormsModule} from "@angular/forms";
 
 @Component({
-  selector: 'app-keyvalue-input-list',
+  selector: 'app-bot-configuration',
   standalone: true,
   imports: [
     NgForOf,
     FormsModule,
     NgIf
   ],
-  templateUrl: './keyvalue-input-list.component.html',
-  styleUrl: './keyvalue-input-list.component.scss'
+  templateUrl: './bot-configuration.component.html',
+  styleUrl: './bot-configuration.component.scss'
 })
-export class KeyvalueInputListComponent {
+export class BotConfigurationComponent {
   public keyvalueList: Array<{key: string, value: string}> = [{key: '', value: ''}];
   public botIsGenerating: boolean = false;
 
