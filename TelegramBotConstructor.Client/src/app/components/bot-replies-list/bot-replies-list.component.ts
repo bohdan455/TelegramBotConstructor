@@ -14,7 +14,7 @@ import {FormsModule} from "@angular/forms";
 })
 export class BotRepliesListComponent {
 
-  @Input() public keyvalueList: Array<{key: string, value: string}>;
+  @Input() public keyvalueList: Array<{key: string, value: string, button: boolean}>;
 
   deleteKeyValue(index: number) {
     this.keyvalueList.splice(index, 1);

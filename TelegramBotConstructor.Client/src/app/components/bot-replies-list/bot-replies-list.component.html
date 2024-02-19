@@ -1,14 +1,23 @@
 <div *ngFor="let keyValue of keyvalueList; index as index" class="keyvalue-input-list__item">
   <input
     [(ngModel)]="keyValue.key"
-    name="key{{index}}}"
+    name="key{{index}}"
     placeholder="Key"
     type="text">
   <input
     [(ngModel)]="keyValue.value"
-    name="value{{index}}}"
+    name="value{{index}}"
     placeholder="Value"
     type="text">
+  <span class="keyvalue-input-checkbox-box">
+      <label class="keyvalue-input-checkbox-label" for="button{{index}}">As button</label>
+      <input
+        [(ngModel)]="keyValue.button"
+        name="button{{index}}"
+        placeholder="false"
+        type="checkbox"
+        id = "button{{index}}">
+      </span>
   <button
     (click)="deleteKeyValue(index)"
     type="button"

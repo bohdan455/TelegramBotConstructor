@@ -9,4 +9,7 @@ public class TelegramAnswerPairModel
 
     [Required]
     public string Answer { get; set; }
+    
+    [Required]
+    public bool Button { get; set; }
 }

@@ -5,4 +5,6 @@ namespace BLL.Services.Interfaces;
 public interface ICodeWriterService
 {
     string CreateSwitchConstructor(List<TelegramAnswerPairModel> answerPairs);
+
+    string CreateButtons(List<TelegramAnswerPairModel> answerPairs);
 }

@@ -4,6 +4,7 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 var builder = new ConfigurationBuilder()
     .AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(),"appsettings.json"), optional: false);
@@ -20,6 +21,11 @@ ReceiverOptions receiverOptions = new ()
 {
     AllowedUpdates = Array.Empty<UpdateType>()
 };
+ReplyKeyboardMarkup replyKeyboardMarkup = new(new[]
+{
+    new KeyboardButton[] { "Share Location", "Share Contact" },
+    new KeyboardButton[] { "Send Poll", "Send Dice" },
+});
 
 botClient.StartReceiving(
     updateHandler: HandleUpdateAsync,
@@ -36,6 +42,8 @@ cts.Cancel();
 
 async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
 {
+    
+    
     if (update.Message is not { Text: { } message } messageObject)
         return;
 
@@ -47,6 +55,7 @@ async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, Cancel
     var sentMessage = await botClient.SendTextMessageAsync(
         chatId: chatId,
         text: answer,
+        replyMarkup: replyKeyboardMarkup,
         cancellationToken: cancellationToken);
 }
 

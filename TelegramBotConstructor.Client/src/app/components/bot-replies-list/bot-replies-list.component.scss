@@ -19,5 +19,18 @@
     cursor: pointer;
   }
 }
+.keyvalue-input-checkbox-label{
+  font-size: 14px;
+  font-family: "Roboto", sans-serif;
+  margin-right: 10px;
+}
 
+.keyvalue-input-checkbox-box{
+  display: inline-flex;
+  flex-direction: column;
+
+  input{
+    cursor: pointer;
+  }
+}
 

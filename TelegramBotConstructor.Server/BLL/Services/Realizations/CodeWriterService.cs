@@ -23,6 +23,17 @@ public class CodeWriterService : ICodeWriterService
         return switchConstructorBuilder.ToString();
     }
 
+    public string CreateButtons(List<TelegramAnswerPairModel> answerPairs)
+    {
+        var buttonsBuilder = new StringBuilder();
+        foreach (var pair in answerPairs.Where(pair => pair.Button))
+        {
+            buttonsBuilder.AppendLine($$"""new KeyboardButton[] {"{{pair.Message}}"},""");
+        }
+
+        return buttonsBuilder.ToString();
+    }
+
     private static string CreateSwitchCase(TelegramAnswerPairModel pairModel)
     {
         var switchBuilder = new StringBuilder();

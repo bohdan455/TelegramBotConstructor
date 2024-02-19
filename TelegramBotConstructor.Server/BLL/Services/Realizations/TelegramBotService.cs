@@ -31,6 +31,7 @@ public class TelegramBotService : ITelegramBotService
         await _fileStorageService.ChangeProjectCode(
             Path.Combine(workingDirectory, randomProjectName),
             MakeBotCode(
+                _codeWriterService.CreateButtons(pairModels),
                 _codeWriterService.CreateSwitchConstructor(pairModels)));
         await _fileStorageService.BuildProject(Path.Combine(workingDirectory, randomProjectName));
         
@@ -38,7 +39,7 @@ public class TelegramBotService : ITelegramBotService
         return await _fileStorageService.CreateArchiveFromFolder(projectPath, archivePath);
     }
 
-    private static string MakeBotCode(string innerCode)
+    private static string MakeBotCode(string buttons,string innerCode)
     {
         var code = $$"""
 using Microsoft.Extensions.Configuration;
@@ -47,6 +48,7 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 var builder = new ConfigurationBuilder()
     .AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(),"appsettings.json"), optional: false);
@@ -63,6 +65,11 @@ ReceiverOptions receiverOptions = new ()
 {
     AllowedUpdates = Array.Empty<UpdateType>()
 };
+
+ReplyKeyboardMarkup replyKeyboardMarkup = new(new KeyboardButton[][]
+{
+    {{buttons}}
+});
 
 botClient.StartReceiving(
     updateHandler: HandleUpdateAsync,
@@ -92,6 +99,7 @@ async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, Cancel
         var sentMessage = await botClient.SendTextMessageAsync(
                 chatId: chatId,
                 text: answer,
+                replyMarkup: replyKeyboardMarkup,
                 cancellationToken: cancellationToken);
             }
 

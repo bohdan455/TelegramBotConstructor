@@ -19,14 +19,14 @@ import {BotRepliesListComponent} from "../bot-replies-list/bot-replies-list.comp
   styleUrl: './bot-configuration.component.scss'
 })
 export class BotConfigurationComponent {
-  public keyvalueList: Array<{key: string, value: string}> = [{key: '', value: ''}];
+  public keyvalueList: Array<{key: string, value: string, button: boolean}> = [{key: '', value: '', button: false}];
   public botIsGenerating: boolean = false;
 
   constructor(public botCreatorService: BotCreatorService) {
   }
 
   addKeyValue() {
-    this.keyvalueList.push({key: '', value: ''});
+    this.keyvalueList.push({key: '', value: '', button: false});
   }
 
   getFile(event: SubmitEvent) {
@@ -37,7 +37,8 @@ export class BotConfigurationComponent {
       messageAnswers: this.keyvalueList.map((item) : TelegramAnswerPairModel => {
         return {
           message: item.key,
-          answer: item.value
+          answer: item.value,
+          button: item.button
         }
       })
     };
