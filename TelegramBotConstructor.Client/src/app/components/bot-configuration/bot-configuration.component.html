@@ -1,8 +1,16 @@
 <div class="keyvalue-input-list">
   <form (submit)="getFile($event)">
     <div *ngFor="let keyValue of keyvalueList; index as index" class="keyvalue-input-list__item">
-      <input required type="text" [(ngModel)]="keyValue.key" placeholder="Key" name="key{{index}}}">
-      <input required type="text" [(ngModel)]="keyValue.value" placeholder="Value" name="value{{index}}}">
+      <input
+        [(ngModel)]="keyValue.key"
+        name="key{{index}}}"
+        placeholder="Key"
+        type="text">
+      <input
+        [(ngModel)]="keyValue.value"
+        name="value{{index}}}"
+        placeholder="Value"
+        type="text">
       <button
         (click)="deleteKeyValue(index)"
         type="button"
