@@ -2,7 +2,7 @@ import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
 import {EndpointsConfiguration} from "../../configurations/endpoints.configuration";
-import {TelegramBotSettingsModel} from "../models/telegramBotSettingsModel";
+import {TelegramBotSettingsModel} from "../models/telegramBotSettings.model";
 
 @Injectable({
   providedIn: 'root'

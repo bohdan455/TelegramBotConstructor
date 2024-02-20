@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import {NgForOf, NgIf} from "@angular/common";
-import {TelegramBotSettingsModel} from "../../models/telegramBotSettingsModel";
-import {TelegramAnswerPairModel} from "../../models/telegramAnswerPairModel";
+import {TelegramBotSettingsModel} from "../../models/telegramBotSettings.model";
+import {TelegramAnswerPairModel} from "../../models/telegramAnswerPair.model";
 import {BotCreatorService} from "../../services/botCreator.service";
 import {FormsModule} from "@angular/forms";
 import {BotRepliesListComponent} from "../bot-replies-list/bot-replies-list.component";
+import {KeyValueModel} from "../../models/keyValue.model";
 
 @Component({
   selector: 'app-bot-configuration',
@@ -19,14 +20,14 @@ import {BotRepliesListComponent} from "../bot-replies-list/bot-replies-list.comp
   styleUrl: './bot-configuration.component.scss'
 })
 export class BotConfigurationComponent {
-  public keyvalueList: Array<{key: string, value: string, button: boolean}> = [{key: '', value: '', button: false}];
+  public keyvalueList: Array<KeyValueModel> = [{key: '', value: '', button: false, nested: []}];
   public botIsGenerating: boolean = false;
 
   constructor(public botCreatorService: BotCreatorService) {
   }
 
   addKeyValue() {
-    this.keyvalueList.push({key: '', value: '', button: false});
+    this.keyvalueList.push({key: '', value: '', button: false, nested: []});
   }
 
   getFile(event: SubmitEvent) {
