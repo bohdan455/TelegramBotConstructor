@@ -64,7 +64,13 @@ public class FileStorageService : IFileStorageService
         var pathToFile = Path.Combine(pathToProject, "Program.cs");
         return File.WriteAllTextAsync(pathToFile, code);   
     }
-    
+
+    public Task RestoreProject(string pathToProject)
+    {
+        const string restoreProjectCommand = $"dotnet restore";
+        return ExecuteCommand(restoreProjectCommand, pathToProject);
+    }
+
     private async Task<string> ExecuteCommand(string command, string directory)
     {
         var processStartInfo = new ProcessStartInfo

@@ -1,3 +1,4 @@
+using Api.Services;
 using BLL.Services.Interfaces;
 using BLL.Services.Realizations;
 
@@ -9,6 +10,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IFileStorageService, FileStorageService>();
 builder.Services.AddTransient<ITelegramBotService, TelegramBotService>();
 builder.Services.AddTransient<ICodeWriterService, CodeWriterService>();
+builder.Services.AddHostedService<BaseProjectRestoreService>();
 
 builder.Services.AddCors(options =>
 {
