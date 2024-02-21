@@ -21,10 +21,9 @@ ReceiverOptions receiverOptions = new ()
 {
     AllowedUpdates = Array.Empty<UpdateType>()
 };
-ReplyKeyboardMarkup replyKeyboardMarkup = new(new[]
+ReplyKeyboardMarkup replyKeyboardMarkup = new(new KeyboardButton[][]
 {
-    new KeyboardButton[] { "Share Location", "Share Contact" },
-    new KeyboardButton[] { "Send Poll", "Send Dice" },
+    // {{buttons}}
 });
 
 botClient.StartReceiving(
@@ -51,7 +50,7 @@ async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, Cancel
 
     Console.WriteLine($"Received a '{message}' message in chat {chatId}.");
     var answer = "Invalid message";
-    
+    // {{innerCode}}
     var sentMessage = await botClient.SendTextMessageAsync(
         chatId: chatId,
         text: answer,
