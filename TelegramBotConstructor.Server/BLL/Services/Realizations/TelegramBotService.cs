@@ -38,6 +38,43 @@ public class TelegramBotService : ITelegramBotService
         var archivePath = Path.Combine(projectPath, $"{randomProjectName}.zip");
         return await _fileStorageService.CreateArchiveFromFolder(projectPath, archivePath);
     }
+    
+    public List<TelegramUserState> GetStates(List<TelegramAnswerPairModel> pairModels)
+    {
+        var states = new List<TelegramUserState>();
+        foreach (var pairModel in pairModels)
+        {
+            states.AddRange(GetNestedStates(pairModel));
+        }
+        
+        AddIdToStates(states);
+        return states;
+    }
+
+    private static IEnumerable<TelegramUserState> GetNestedStates(TelegramAnswerPairModel pairModel)
+    {
+        var states = new List<TelegramUserState>();
+        if (pairModel.Nested.Count == 0) return states;
+        
+        states.Add(new()
+        {
+            State = pairModel.Message
+        });
+        foreach (var nested in pairModel.Nested)
+        {
+            states.AddRange(GetNestedStates(nested));
+        }
+
+        return states;
+    }
+    
+    private static void AddIdToStates(IReadOnlyList<TelegramUserState> states)
+    {
+        for (var i = 0; i < states.Count; i++)
+        {
+            states[i].Id = i + 1;
+        }
+    } 
 
     private static string MakeBotCode(string buttons,string innerCode)
     {

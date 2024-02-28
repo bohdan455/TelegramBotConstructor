@@ -20,4 +20,11 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="database.db" />
+      <Content Include="database.db">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>

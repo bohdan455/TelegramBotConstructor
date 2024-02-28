@@ -4,5 +4,7 @@ namespace BLL.Services.Interfaces;
 
 public interface ITelegramBotService
 {
-    public Task<Stream> CreateBot(List<TelegramAnswerPairModel> pairModels);
+    Task<Stream> CreateBot(List<TelegramAnswerPairModel> pairModels);
+    
+    List<TelegramUserState> GetStates(List<TelegramAnswerPairModel> pairModels);
 }
