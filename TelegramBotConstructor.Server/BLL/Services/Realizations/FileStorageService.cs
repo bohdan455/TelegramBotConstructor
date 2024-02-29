@@ -42,11 +42,7 @@ public class FileStorageService : IFileStorageService
 
         using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
         {
-            foreach (var filePath  in Directory.GetFiles(projectDebugPath))
-            {
-                var fileName = Path.GetFileName(filePath);
-                archive.CreateEntryFromFile(filePath, fileName);
-            }
+            AddFolderToZip(archive, projectDebugPath, string.Empty);
         }
         
         zipStream.Seek(0, SeekOrigin.Begin);
@@ -69,6 +65,23 @@ public class FileStorageService : IFileStorageService
     {
         const string restoreProjectCommand = $"dotnet restore";
         return ExecuteCommand(restoreProjectCommand, pathToProject);
+    }
+    
+    private static void AddFolderToZip(ZipArchive archive, string folderPath, string parentFolder)
+    {
+        foreach (string file in Directory.GetFiles(folderPath))
+        {
+            string entryName = Path.Combine(parentFolder, Path.GetFileName(file));
+            archive.CreateEntryFromFile(file, entryName);
+        }
+
+        foreach (string subFolder in Directory.GetDirectories(folderPath))
+        {
+            string entryName = Path.Combine(parentFolder, Path.GetFileName(subFolder) + "/");
+            archive.CreateEntry(entryName); 
+            
+            AddFolderToZip(archive, subFolder, entryName);
+        }
     }
 
     private async Task<string> ExecuteCommand(string command, string directory)

@@ -30,9 +30,7 @@ public class TelegramBotService : ITelegramBotService
 
         await _fileStorageService.ChangeProjectCode(
             Path.Combine(workingDirectory, randomProjectName),
-            MakeBotCode(
-                _codeWriterService.CreateButtons(pairModels),
-                _codeWriterService.CreateSwitchConstructor(pairModels)));
+            MakeBotCode(pairModels));
         await _fileStorageService.BuildProject(Path.Combine(workingDirectory, randomProjectName));
         
         var archivePath = Path.Combine(projectPath, $"{randomProjectName}.zip");
@@ -50,6 +48,8 @@ public class TelegramBotService : ITelegramBotService
         AddIdToStates(states);
         return states;
     }
+    
+    
 
     private static IEnumerable<TelegramUserState> GetNestedStates(TelegramAnswerPairModel pairModel)
     {
@@ -76,11 +76,12 @@ public class TelegramBotService : ITelegramBotService
         }
     } 
 
-    private static string MakeBotCode(string buttons,string innerCode)
+    private string MakeBotCode(List<TelegramAnswerPairModel> pairModels)
     {
         var botText = File.ReadAllText(Path.Combine(ProjectSavingPlaceConfiguration.BaseProjectPath,"Program.cs"));
-        botText = botText.Replace("// {{buttons}}", buttons);
-        botText = botText.Replace("// {{innerCode}}", innerCode);
+        botText = botText.Replace("// {{buttons}}", _codeWriterService.CreateButtons(pairModels));
+        botText = botText.Replace("// {{innerCode}}", _codeWriterService.CreateSwitchConstructor(pairModels));
+        botText = botText.Replace("// {{states}}", _codeWriterService.CreateStatesValueSql(GetStates(pairModels)));
         return botText;
     }
 }

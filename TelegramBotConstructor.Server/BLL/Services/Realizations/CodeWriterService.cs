@@ -33,6 +33,17 @@ public class CodeWriterService : ICodeWriterService
 
         return buttonsBuilder.ToString();
     }
+    
+    public string CreateStatesValueSql(List<TelegramUserState> states)
+    {
+        var statesValueBuilder = new StringBuilder();
+        foreach (var state in states)
+        {
+            statesValueBuilder.Append($"({state.Id}, '{state.State}'),");
+        }
+        var statesValue = statesValueBuilder.ToString();
+        return statesValue.Remove(statesValue.Length - 1);
+    }
 
     private static string CreateSwitchCase(TelegramAnswerPairModel pairModel)
     {

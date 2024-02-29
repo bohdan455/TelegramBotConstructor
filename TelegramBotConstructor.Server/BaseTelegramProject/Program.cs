@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Dapper;
+using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Configuration;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
@@ -14,6 +16,11 @@ IConfiguration config = builder.Build();
 var token = config["BotToken"] ?? throw new ArgumentException("Provide bot token in appsettings.json");
 
 var botClient = new TelegramBotClient(token);
+
+await using (var connection = new SqliteConnection(config.GetConnectionString("DefaultConnection")))
+{
+    await connection.ExecuteAsync("INSERT INTO STATES (id,  state) VALUES // {{states}};");
+};
 
 using CancellationTokenSource cts = new ();
 
@@ -41,8 +48,6 @@ cts.Cancel();
 
 async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
 {
-    
-    
     if (update.Message is not { Text: { } message } messageObject)
         return;
 
