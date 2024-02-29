@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using System.Data;
+using Dapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 using Telegram.Bot;
@@ -48,11 +49,13 @@ cts.Cancel();
 
 async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
 {
+    await using var connection = new SqliteConnection(config.GetConnectionString("DefaultConnection")); ;
+    
     if (update.Message is not { Text: { } message } messageObject)
         return;
 
     var chatId = messageObject.Chat.Id;
-
+    await SaveUserId(connection, chatId);
     Console.WriteLine($"Received a '{message}' message in chat {chatId}.");
     var answer = "Invalid message";
     // {{innerCode}}
@@ -61,6 +64,17 @@ async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, Cancel
         text: answer,
         replyMarkup: replyKeyboardMarkup,
         cancellationToken: cancellationToken);
+}
+
+async Task ChangeUserState(IDbConnection connection, long telegramId, string state)
+{
+    var stateId = await connection.ExecuteScalarAsync<int>("SELECT id FROM STATES WHERE state = @state", new {state});
+    await connection.ExecuteAsync("UPDATE USERS SET currentState = @stateId WHERE telegramId = @telegramId", new {telegramId, stateId});
+}
+
+async Task SaveUserId(IDbConnection connection, long telegramId)
+{
+    await connection.ExecuteAsync("INSERT OR IGNORE INTO USERS (telegramId) VALUES (@telegramId)", new {telegramId});
 }
 
 Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)

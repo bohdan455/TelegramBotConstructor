@@ -10,7 +10,7 @@ public class CodeWriterService : ICodeWriterService
     public string CreateSwitchConstructor(List<TelegramAnswerPairModel> answerPairs)
     {
         var switchConstructorBuilder = new StringBuilder();
-        switchConstructorBuilder.AppendLine($"switch ({CodeWriterConfiguration.MessageTextVariableName})");
+        switchConstructorBuilder.AppendLine($"switch (message)");
         switchConstructorBuilder.AppendLine("{");
         
         foreach (var pair in answerPairs)
@@ -53,6 +53,10 @@ public class CodeWriterService : ICodeWriterService
             ? "default:"
             : $"case \"{pairModel.Message}\":"
         );
+        if(pairModel.Nested.Count != 0)
+        {
+            switchBuilder.AppendLine("await ChangeUserState(connection, chatId, message);");
+        }
         switchBuilder.AppendLine($"answer = \"{pairModel.Answer}\";");
         switchBuilder.AppendLine("break;");
 
