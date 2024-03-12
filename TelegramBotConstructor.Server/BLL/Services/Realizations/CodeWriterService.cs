@@ -37,6 +37,7 @@ public class CodeWriterService : ICodeWriterService
     public string CreateStatesValueSql(List<TelegramUserState> states)
     {
         var statesValueBuilder = new StringBuilder();
+        statesValueBuilder.Append($"(0, 'Default'),");
         foreach (var state in states)
         {
             statesValueBuilder.Append($"({state.Id}, '{state.State}'),");
